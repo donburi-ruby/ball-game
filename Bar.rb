@@ -1,0 +1,3 @@
+class Bar < Sprite
+
+end    
