@@ -12,18 +12,18 @@ ballX, ballY = windowW/2-ball_image.width/2, windowH/2-ball_image.height/2
 ball = Ball.new(ballX, ballY, ball_image)
 
 # bar settings
-bar_image = Image.new(10, 200, [255, 255, 255, 255])
+barImage = Image.new(10, 200, [255, 255, 255, 255])
 
 # left bar settings
-barlX, barlY = 50, windowH/2-bar_image.height/2
-bar_left = Bar.new(barlX, barlY, bar_image)
+barLX, barLY = 50, windowH/2-barImage.height/2
+barLeft = Bar.new(barLX, barLY, barImage)
 
 # right bar settings
-barrX, barrY = windowW-bar_image.width-50, windowH/2-bar_image.height/2
-bar_right = Bar.new(barrX, barrY, bar_image)
+barRX, barRY = windowW-barImage.width-50, windowH/2-barImage.height/2
+barRight = Bar.new(barRX, barRY, barImage)
 
 Window.loop do
     ball.draw()
-    bar_left.draw()
-    bar_right.draw()
+    barLeft.draw()
+    barRight.draw()
 end
