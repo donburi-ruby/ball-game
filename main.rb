@@ -24,6 +24,7 @@ barRight = Bar.new(barRX, barRY, barImage)
 
 # ball speed for debug
 speed = 3
+speedY = 2
 
 Window.loop do
     ball.draw()
@@ -35,17 +36,28 @@ Window.loop do
     ballSideY = ball.y + ball.image.height/2
     ballRightX = ballLeftX+ball.image.width
 
-    # move ball
+    # move ball for debug
     ball.x += speed
+    ball.y += speedY
 
-    # check hitting of ball & right bar
+    # check hitting of ball & right bar side
     if(ballSideY>=barRight.y && ballSideY<=barRight.y+barRight.image.height && ballRightX>=barRight.x && ballRightX<=barRight.x+speed)
         speed *= -1
     end
 
-    # check hitting of ball & left bar
+    # check hitting of ball & left bar side
     if(ballSideY>=barLeft.y && ballSideY<=barLeft.y+barLeft.image.height && ballLeftX<=barLeft.x+barLeft.image.width && ballLeftX>=barLeft.x+barLeft.image.width+speed)
         speed *= -1
+    end
+
+    # check hitting of ball & window's top
+    if(ball.y<=0)
+        speedY *= -1
+    end
+
+    # check hitting of ball & window's bottom
+    if(ball.y+ball.image.height>=windowH)
+        speedY *= -1
     end
 
     # controll bars for debug
