@@ -1,0 +1,2 @@
+class ball > Sprite
+end
