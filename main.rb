@@ -1,5 +1,5 @@
 require 'dxruby'
-require_relative 'Ball'
+require_relative '../Ball'
 require_relative 'Bar'
 
 #テスト
@@ -28,6 +28,13 @@ playing = false
 # ball speed for debug
 speed = 3
 speedY = 2
+
+# create font object
+font = Font.new(32)
+
+# score for debug
+scoreR = 0
+scoreL = 0
 
 Window.loop do
     if(playing)
@@ -67,7 +74,11 @@ Window.loop do
         # controll bars for debug
         barLeft.y += Input.y
         barRight.y += Input.y
-        if(ball.x+ball.image.width>windowW || ball.x<0)
+        if(ball.x+ball.image.width>windowW)
+            scoreL += 1
+            playing = false
+        elsif(ball.x<0)
+            scoreR += 1
             playing = false
         end
     end
@@ -83,4 +94,6 @@ Window.loop do
             playing = true
         end
     end
+    Window.draw_font(0, 0, "#{scoreL}", font)
+    Window.draw_font(windowW-32, 0, "#{scoreR}", font)
 end
