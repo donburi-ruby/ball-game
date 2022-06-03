@@ -1,5 +1,5 @@
 require 'dxruby'
-require_relative '../Ball'
+require_relative 'Ball'
 require_relative 'Bar'
 
 #テスト
@@ -72,8 +72,24 @@ Window.loop do
         end
 
         # controll bars for debug
-        barLeft.y += Input.y
-        barRight.y += Input.y
+        if(barLeft.y>=0 && barLeft.y+barLeft.image.height<=windowH)
+            barLeft.y += Input.y
+            if(barLeft.y<0)
+                barLeft.y = 0
+            elsif(barLeft.y+barLeft.image.height>windowH)
+                barLeft.y = windowH-barLeft.image.height
+            end
+        end
+
+        if(barRight.y>=0 && barRight.y+barRight.image.height<=windowH)
+            barRight.y += Input.y
+            if(barRight.y<0)
+                barRight.y = 0
+            elsif(barRight.y+barRight.image.height>windowH)
+                barRight.y = windowH-barRight.image.height
+            end
+        end
+
         if(ball.x+ball.image.width>windowW)
             scoreL += 1
             playing = false
