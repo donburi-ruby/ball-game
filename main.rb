@@ -72,24 +72,22 @@ Window.loop do
         end
 
         # controll bars for debug
-        if(barLeft.y>=0 && barLeft.y+barLeft.image.height<=windowH)
-            barLeft.y += Input.y
-            if(barLeft.y<0)
-                barLeft.y = 0
-            elsif(barLeft.y+barLeft.image.height>windowH)
-                barLeft.y = windowH-barLeft.image.height
-            end
+        barLeft.y += Input.y
+        # to be in window
+        if(barLeft.y<0)
+            barLeft.y = 0
+        elsif(barLeft.y+barLeft.image.height>windowH)
+            barLeft.y = windowH-barLeft.image.height
         end
-
-        if(barRight.y>=0 && barRight.y+barRight.image.height<=windowH)
-            barRight.y += Input.y
-            if(barRight.y<0)
-                barRight.y = 0
-            elsif(barRight.y+barRight.image.height>windowH)
-                barRight.y = windowH-barRight.image.height
-            end
+        
+        barRight.y += Input.y
+        # to be in window
+        if(barRight.y<0)
+            barRight.y = 0
+        elsif(barRight.y+barRight.image.height>windowH)
+            barRight.y = windowH-barRight.image.height
         end
-
+        
         if(ball.x+ball.image.width>windowW)
             scoreL += 1
             playing = false
