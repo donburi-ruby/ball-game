@@ -2,6 +2,8 @@ require 'dxruby'
 require_relative 'Ball'
 require_relative 'Bar'
 
+ENDPOINT = 10
+
 #テスト
 # Window Size 
 windowH, windowW = 480, 640
@@ -24,6 +26,12 @@ barRight = Bar.new(barRX, barRY, barImage)
 
 # playing flag
 playing = false
+
+# game finish flag
+finish = false
+
+# winner name
+playerSide = "right"
 
 # ball speed for debug
 speed = 3
@@ -91,23 +99,50 @@ Window.loop do
         if(ball.x+ball.image.width>windowW)
             scoreL += 1
             playing = false
+            ball.x, ball.y = ballX, ballY
+            barRight.x, barRight.y = barRX, barRY
+            barLeft.x, barLeft.y = barLX, barLY
+            if(scoreL==ENDPOINT)
+                finish = true
+                playerSide = "left"
+            end
         elsif(ball.x<0)
             scoreR += 1
             playing = false
+            ball.x, ball.y = ballX, ballY
+            barRight.x, barRight.y = barRX, barRY
+            barLeft.x, barLeft.y = barLX, barLY
+            if(scoreR==ENDPOINT)
+                finish = true
+                playerSide = "right"
+            end
         end
     end
 
-    if(!playing)
-        ball.x, ball.y = ballX, ballY
-        barRight.x, barRight.y = barRX, barRY
-        barLeft.x, barLeft.y = barLX, barLY
+    if(!playing && !finish)
         ball.draw()
         barRight.draw()
         barLeft.draw()
+        Window.draw_font(windowW/2-120, windowH-32, "SPACEキーで開始", font)
         if(Input.key_push?(K_SPACE))
             playing = true
         end
     end
     Window.draw_font(0, 0, "#{scoreL}", font)
     Window.draw_font(windowW-32, 0, "#{scoreR}", font)
+
+    if(finish)
+        Window.draw_font(windowW/2-120, 100, "Winner    Bar "+playerSide, font)
+        ball.draw()
+        barRight.draw()
+        barLeft.draw()
+        Window.draw_font(windowW/2-130, windowH-96, "ESCキーでゲーム終了", font)
+        Window.draw_font(windowW/2-130, windowH-32, "ENTERキーでリスタート", font)
+        if(Input.key_push?(K_RETURN))
+            playing, finish = false, false
+            scoreR, scoreL = 0, 0
+        elsif(Input.key_push?(K_ESCAPE))
+            break
+        end
+    end
 end
