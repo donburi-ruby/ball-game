@@ -1,5 +1,5 @@
 require 'dxruby'
-require_relative '../Ball'
+require_relative 'Ball'
 require_relative 'Bar'
 
 #テスト
