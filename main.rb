@@ -22,45 +22,65 @@ barLeft = Bar.new(barLX, barLY, barImage)
 barRX, barRY = windowW-barImage.width-50, windowH/2-barImage.height/2
 barRight = Bar.new(barRX, barRY, barImage)
 
+# playing flag
+playing = false
+
 # ball speed for debug
 speed = 3
 speedY = 2
 
 Window.loop do
-    ball.draw()
-    barLeft.draw()
-    barRight.draw()
+    if(playing)
+        ball.draw()
+        barLeft.draw()
+        barRight.draw()
 
-    # get ball side location
-    ballLeftX = ball.x
-    ballSideY = ball.y + ball.image.height/2
-    ballRightX = ballLeftX+ball.image.width
+        # get ball side location
+        ballLeftX = ball.x
+        ballSideY = ball.y + ball.image.height/2
+        ballRightX = ballLeftX+ball.image.width
 
-    # move ball for debug
-    ball.x += speed
-    ball.y += speedY
+        # move ball for debug
+        ball.x += speed
+        ball.y += speedY
 
-    # check hitting of ball & right bar side
-    if(ballSideY>=barRight.y && ballSideY<=barRight.y+barRight.image.height && ballRightX>=barRight.x && ballRightX<=barRight.x+speed)
-        speed *= -1
+        # check hitting of ball & right bar side
+        if(ballSideY>=barRight.y && ballSideY<=barRight.y+barRight.image.height && ballRightX>=barRight.x && ballRightX<=barRight.x+speed)
+            speed *= -1
+        end
+
+        # check hitting of ball & left bar side
+        if(ballSideY>=barLeft.y && ballSideY<=barLeft.y+barLeft.image.height && ballLeftX<=barLeft.x+barLeft.image.width && ballLeftX>=barLeft.x+barLeft.image.width+speed)
+            speed *= -1
+        end
+
+        # check hitting of ball & window's top
+        if(ball.y<=0)
+            speedY *= -1
+        end
+
+        # check hitting of ball & window's bottom
+        if(ball.y+ball.image.height>=windowH)
+            speedY *= -1
+        end
+
+        # controll bars for debug
+        barLeft.y += Input.y
+        barRight.y += Input.y
+        if(ball.x+ball.image.width>windowW || ball.x<0)
+            playing = false
+        end
     end
 
-    # check hitting of ball & left bar side
-    if(ballSideY>=barLeft.y && ballSideY<=barLeft.y+barLeft.image.height && ballLeftX<=barLeft.x+barLeft.image.width && ballLeftX>=barLeft.x+barLeft.image.width+speed)
-        speed *= -1
+    if(!playing)
+        ball.x, ball.y = ballX, ballY
+        barRight.x, barRight.y = barRX, barRY
+        barLeft.x, barLeft.y = barLX, barLY
+        ball.draw()
+        barRight.draw()
+        barLeft.draw()
+        if(Input.key_push?(K_SPACE))
+            playing = true
+        end
     end
-
-    # check hitting of ball & window's top
-    if(ball.y<=0)
-        speedY *= -1
-    end
-
-    # check hitting of ball & window's bottom
-    if(ball.y+ball.image.height>=windowH)
-        speedY *= -1
-    end
-
-    # controll bars for debug
-    barLeft.y += Input.y
-    barRight.y += Input.y
 end
