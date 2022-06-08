@@ -46,6 +46,7 @@ scoreL = 0
 
 Window.loop do
     if(playing)
+        # draw ball & bars
         ball.draw()
         barLeft.draw()
         barRight.draw()
@@ -79,7 +80,7 @@ Window.loop do
             speedY *= -1
         end
 
-        # controll bars for debug
+        # controll left bar for debug
         barLeft.y += Input.y
         # to be in window
         if(barLeft.y<0)
@@ -88,6 +89,7 @@ Window.loop do
             barLeft.y = windowH-barLeft.image.height
         end
         
+        # controll right bar for debug
         barRight.y += Input.y
         # to be in window
         if(barRight.y<0)
@@ -96,22 +98,27 @@ Window.loop do
             barRight.y = windowH-barRight.image.height
         end
         
-        if(ball.x+ball.image.width>windowW)
+        # check scoring a goal
+        if(ball.x+ball.image.width>windowW) # right goal
             scoreL += 1
             playing = false
+            # position initializing
             ball.x, ball.y = ballX, ballY
             barRight.x, barRight.y = barRX, barRY
             barLeft.x, barLeft.y = barLX, barLY
+            # check game end
             if(scoreL==ENDPOINT)
                 finish = true
                 playerSide = "left"
             end
-        elsif(ball.x<0)
+        elsif(ball.x<0) # left goal
             scoreR += 1
             playing = false
+            # position initializing
             ball.x, ball.y = ballX, ballY
             barRight.x, barRight.y = barRX, barRY
             barLeft.x, barLeft.y = barLX, barLY
+            # check game end
             if(scoreR==ENDPOINT)
                 finish = true
                 playerSide = "right"
@@ -119,29 +126,37 @@ Window.loop do
         end
     end
 
+    # intermediate between the game
     if(!playing && !finish)
+        # draw ball & bars
         ball.draw()
         barRight.draw()
         barLeft.draw()
+        # SPACE restart
         Window.draw_font(windowW/2-120, windowH-32, "SPACEキーで開始", font)
         if(Input.key_push?(K_SPACE))
             playing = true
         end
     end
+
+    # draw score
     Window.draw_font(0, 0, "#{scoreL}", font)
     Window.draw_font(windowW-32, 0, "#{scoreR}", font)
 
     if(finish)
+        # drawa winner
         Window.draw_font(windowW/2-120, 100, "Winner    Bar "+playerSide, font)
+        # draw ball & bars
         ball.draw()
         barRight.draw()
         barLeft.draw()
+
         Window.draw_font(windowW/2-130, windowH-96, "ESCキーでゲーム終了", font)
         Window.draw_font(windowW/2-130, windowH-32, "ENTERキーでリスタート", font)
-        if(Input.key_push?(K_RETURN))
+        if(Input.key_push?(K_RETURN)) # Enter restart
             playing, finish = false, false
             scoreR, scoreL = 0, 0
-        elsif(Input.key_push?(K_ESCAPE))
+        elsif(Input.key_push?(K_ESCAPE)) # Esc finish
             break
         end
     end
