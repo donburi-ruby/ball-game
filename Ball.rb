@@ -1,4 +1,5 @@
 class Ball < Sprite
+  attr_accessor :speedX, :speedY
     def initialize(x, y, image)
      @ball = image
      @speedX = rand(3)+1
