@@ -2,6 +2,8 @@ require 'dxruby'
 require_relative 'Ball'
 require_relative 'Bar'
 
+ENDPOINT = 10
+
 #テスト
 # Window Size 
 windowH, windowW = 480, 640
@@ -25,12 +27,26 @@ barRight = Bar.new(barRX, barRY, barImage)
 # playing flag
 playing = false
 
+# game finish flag
+finish = false
+
+# winner name
+playerSide = "right"
+
 # ball speed for debug
 speed = 3
 speedY = 2
 
+# create font object
+font = Font.new(32)
+
+# score for debug
+scoreR = 0
+scoreL = 0
+
 Window.loop do
     if(playing)
+        # draw ball & bars
         ball.draw()
         barLeft.draw()
         barRight.draw()
@@ -64,23 +80,84 @@ Window.loop do
             speedY *= -1
         end
 
-        # controll bars for debug
+        # controll left bar for debug
         barLeft.y += Input.y
+        # to be in window
+        if(barLeft.y<0)
+            barLeft.y = 0
+        elsif(barLeft.y+barLeft.image.height>windowH)
+            barLeft.y = windowH-barLeft.image.height
+        end
+        
+        # controll right bar for debug
         barRight.y += Input.y
-        if(ball.x+ball.image.width>windowW || ball.x<0)
+        # to be in window
+        if(barRight.y<0)
+            barRight.y = 0
+        elsif(barRight.y+barRight.image.height>windowH)
+            barRight.y = windowH-barRight.image.height
+        end
+        
+        # check scoring a goal
+        if(ball.x+ball.image.width>windowW) # right goal
+            scoreL += 1
             playing = false
+            # position initializing
+            ball.x, ball.y = ballX, ballY
+            barRight.x, barRight.y = barRX, barRY
+            barLeft.x, barLeft.y = barLX, barLY
+            # check game end
+            if(scoreL==ENDPOINT)
+                finish = true
+                playerSide = "left"
+            end
+        elsif(ball.x<0) # left goal
+            scoreR += 1
+            playing = false
+            # position initializing
+            ball.x, ball.y = ballX, ballY
+            barRight.x, barRight.y = barRX, barRY
+            barLeft.x, barLeft.y = barLX, barLY
+            # check game end
+            if(scoreR==ENDPOINT)
+                finish = true
+                playerSide = "right"
+            end
         end
     end
 
-    if(!playing)
-        ball.x, ball.y = ballX, ballY
-        barRight.x, barRight.y = barRX, barRY
-        barLeft.x, barLeft.y = barLX, barLY
+    # intermediate between the game
+    if(!playing && !finish)
+        # draw ball & bars
         ball.draw()
         barRight.draw()
         barLeft.draw()
+        # SPACE restart
+        Window.draw_font(windowW/2-120, windowH-32, "SPACEキーで開始", font)
         if(Input.key_push?(K_SPACE))
             playing = true
+        end
+    end
+
+    # draw score
+    Window.draw_font(0, 0, "#{scoreL}", font)
+    Window.draw_font(windowW-32, 0, "#{scoreR}", font)
+
+    if(finish)
+        # drawa winner
+        Window.draw_font(windowW/2-120, 100, "Winner    Bar "+playerSide, font)
+        # draw ball & bars
+        ball.draw()
+        barRight.draw()
+        barLeft.draw()
+
+        Window.draw_font(windowW/2-130, windowH-96, "ESCキーでゲーム終了", font)
+        Window.draw_font(windowW/2-130, windowH-32, "ENTERキーでリスタート", font)
+        if(Input.key_push?(K_RETURN)) # Enter restart
+            playing, finish = false, false
+            scoreR, scoreL = 0, 0
+        elsif(Input.key_push?(K_ESCAPE)) # Esc finish
+            break
         end
     end
 end
