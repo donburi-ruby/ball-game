@@ -7,8 +7,8 @@ class Ball < Sprite
     end
 
     def update
-      self.x += 1
-      self.y += 1
+      self.x += @speedX
+      self.y += @speedY
     end
 
     def setLocation(x, y)
@@ -17,11 +17,11 @@ class Ball < Sprite
     end
 
     def boundX
-      speedX *= -1
+      @speedX *= -1
     end
 
     def boundY
-      speedY *= -1
+      @speedY *= -1
     end
 
 end
