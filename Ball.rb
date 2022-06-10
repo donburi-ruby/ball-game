@@ -9,6 +9,7 @@ class Ball < Sprite
     def update
       self.x += 1
       self.y += 1
+    end
 
     def setLocation(x, y)
       self.x=x 
