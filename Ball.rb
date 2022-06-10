@@ -6,9 +6,17 @@ class Ball < Sprite
      super
     end
 
-    def update
-      self.x += @speedX
-      self.y += @speedY
+    def setLocation(x, y)
+      self.x=x 
+      self.y=y
+    end
+
+    def boundX
+      speedX *= -1
+    end
+
+    def boundY
+      speedY *= -1
     end
 
 end
