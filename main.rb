@@ -75,6 +75,29 @@ Window.loop do
             ball.boundY()
         end
 
+        # get ball's top & bottom location
+        ballVerticalX = ball.x+ball.image.width/2
+        ballTopY = ball.y
+        ballBottomY = ball.y+ball.image.height
+
+        # check hitting of ball & right bar top or bottom
+        if(ballVerticalX>=barRight.x && ballVerticalX<=barRight.x+barRight.image.width)
+            if(ballBottomY>=barRight.y && ballBottomY<=barRight.y+ball.speedY)
+                ball.boundY()
+            elsif(ballTopY<=barRight.y+barRight.image.height && ballTopY>=barRight.y+barRight.image.height+ball.speedY)
+                ball.boundY()
+            end
+        end
+
+        # check hitting of ball & left bar top or bottom
+        if(ballVerticalX>=barLeft.x && ballVerticalX<=barLeft.x+barLeft.image.width)
+            if(ballBottomY>=barLeft.y && ballBottomY<=barLeft.y+ball.speedY)
+                ball.boundY()
+            elsif(ballTopY<=barLeft.y+barLeft.image.height && ballTopY>=barLeft.y+barLeft.image.height+ball.speedY)
+                ball.boundY()
+            end
+        end
+
         # controll left bar for debug
         barLeft.y += Input.y
         # to be in window
