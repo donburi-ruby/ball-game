@@ -33,10 +33,6 @@ finish = false
 # winner name
 playerSide = "right"
 
-# ball speed for debug
-speed = 3
-speedY = 2
-
 # create font object
 font = Font.new(32)
 
@@ -57,27 +53,26 @@ Window.loop do
         ballRightX = ballLeftX+ball.image.width
 
         # move ball for debug
-        ball.x += speed
-        ball.y += speedY
+        ball.update()
 
         # check hitting of ball & right bar side
-        if(ballSideY>=barRight.y && ballSideY<=barRight.y+barRight.image.height && ballRightX>=barRight.x && ballRightX<=barRight.x+speed)
-            speed *= -1
+        if(ballSideY>=barRight.y && ballSideY<=barRight.y+barRight.image.height && ballRightX>=barRight.x && ballRightX<=barRight.x+ball.speedX)
+            ball.boundX()
         end
 
         # check hitting of ball & left bar side
-        if(ballSideY>=barLeft.y && ballSideY<=barLeft.y+barLeft.image.height && ballLeftX<=barLeft.x+barLeft.image.width && ballLeftX>=barLeft.x+barLeft.image.width+speed)
-            speed *= -1
+        if(ballSideY>=barLeft.y && ballSideY<=barLeft.y+barLeft.image.height && ballLeftX<=barLeft.x+barLeft.image.width && ballLeftX>=barLeft.x+barLeft.image.width+ball.speedX)
+            ball.boundX()
         end
 
         # check hitting of ball & window's top
         if(ball.y<=0)
-            speedY *= -1
+            ball.boundY()
         end
 
         # check hitting of ball & window's bottom
         if(ball.y+ball.image.height>=windowH)
-            speedY *= -1
+            ball.boundY()
         end
 
         # controll left bar for debug
@@ -103,7 +98,7 @@ Window.loop do
             scoreL += 1
             playing = false
             # position initializing
-            ball.x, ball.y = ballX, ballY
+            ball.setLocation(ballX, ballY)
             barRight.x, barRight.y = barRX, barRY
             barLeft.x, barLeft.y = barLX, barLY
             # check game end
@@ -115,7 +110,7 @@ Window.loop do
             scoreR += 1
             playing = false
             # position initializing
-            ball.x, ball.y = ballX, ballY
+            ball.setLocation(ballX, ballY)
             barRight.x, barRight.y = barRX, barRY
             barLeft.x, barLeft.y = barLX, barLY
             # check game end
