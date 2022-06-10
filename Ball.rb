@@ -1,4 +1,4 @@
-class ball < Sprite
+class Ball < Sprite
     def initialize(x, y, image)
      @ball = image
      @speedX = rand(3)+1
