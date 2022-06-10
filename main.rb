@@ -119,8 +119,8 @@ Window.loop do
             playing = false
             # position initializing
             ball.setLocation(ballX, ballY)
-            barRight.x, barRight.y = barRight.setlocation(barRX, barRY)
-            barLeft.x, barLeft.y = barLeft.setlocation(barLX, barLY)
+            barRight.setLocation(barRX, barRY)
+            barLeft.setLocation(barLX, barLY)
             # check game end
             if(barLeft.score==ENDPOINT)
                 finish = true
@@ -131,8 +131,8 @@ Window.loop do
             playing = false
             # position initializing
             ball.setLocation(ballX, ballY)
-            barRight.x, barRight.y = barRight.setlocation(barRX, barRY)
-            barLeft.x, barLeft.y = barLeft.setlocation(barLX, barLY)
+            barRight.setLocation(barRX, barRY)
+            barLeft.setLocation(barLX, barLY)
             # check game end
             if(barRight.score==ENDPOINT)
                 finish = true
@@ -151,6 +151,7 @@ Window.loop do
         Window.draw_font(windowW/2-120, windowH-32, "SPACEキーで開始", font)
         if(Input.key_push?(K_SPACE))
             playing = true
+            ball.setSpeed()
         end
     end
 
@@ -171,6 +172,7 @@ Window.loop do
         if(Input.key_push?(K_RETURN)) # Enter restart
             playing, finish = false, false
             barRight.score, barLeft.score = 0, 0
+            ball.setSpeed()
         elsif(Input.key_push?(K_ESCAPE)) # Esc finish
             break
         end
