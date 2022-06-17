@@ -18,11 +18,11 @@ barImage = Image.new(10, 200, [255, 255, 255, 255])
 
 # left bar settings
 barLX, barLY = 50, windowH/2-barImage.height/2
-barLeft = Bar.new(barLX, barLY, barImage)
+barLeft = LeftBar.new(barLX, barLY, barImage)
 
 # right bar settings
 barRX, barRY = windowW-barImage.width-50, windowH/2-barImage.height/2
-barRight = Bar.new(barRX, barRY, barImage)
+barRight = RightBar.new(barRX, barRY, barImage)
 
 # playing flag
 playing = false
@@ -36,9 +36,7 @@ playerSide = "right"
 # create font object
 font = Font.new(32)
 
-# score for debug
-scoreR = 0
-scoreL = 0
+
 
 Window.loop do
     if(playing)
@@ -52,7 +50,6 @@ Window.loop do
         ballSideY = ball.y + ball.image.height/2
         ballRightX = ballLeftX+ball.image.width
 
-        # move ball for debug
         ball.update()
 
         # check hitting of ball & right bar side
@@ -75,8 +72,31 @@ Window.loop do
             ball.boundY()
         end
 
+        # get ball's top & bottom location
+        ballVerticalX = ball.x+ball.image.width/2
+        ballTopY = ball.y
+        ballBottomY = ball.y+ball.image.height
+
+        # check hitting of ball & right bar top or bottom
+        if(ballVerticalX>=barRight.x && ballVerticalX<=barRight.x+barRight.image.width)
+            if(ballBottomY>=barRight.y && ballBottomY<=barRight.y+ball.speedY)
+                ball.boundY()
+            elsif(ballTopY<=barRight.y+barRight.image.height && ballTopY>=barRight.y+barRight.image.height+ball.speedY)
+                ball.boundY()
+            end
+        end
+
+        # check hitting of ball & left bar top or bottom
+        if(ballVerticalX>=barLeft.x && ballVerticalX<=barLeft.x+barLeft.image.width)
+            if(ballBottomY>=barLeft.y && ballBottomY<=barLeft.y+ball.speedY)
+                ball.boundY()
+            elsif(ballTopY<=barLeft.y+barLeft.image.height && ballTopY>=barLeft.y+barLeft.image.height+ball.speedY)
+                ball.boundY()
+            end
+        end
+
         # controll left bar for debug
-        barLeft.y += Input.y
+        barLeft.update()
         # to be in window
         if(barLeft.y<0)
             barLeft.y = 0
@@ -85,7 +105,7 @@ Window.loop do
         end
         
         # controll right bar for debug
-        barRight.y += Input.y
+        barRight.update
         # to be in window
         if(barRight.y<0)
             barRight.y = 0
@@ -95,26 +115,26 @@ Window.loop do
         
         # check scoring a goal
         if(ball.x+ball.image.width>windowW) # right goal
-            scoreL += 1
+            barLeft.score += 1
             playing = false
             # position initializing
             ball.setLocation(ballX, ballY)
-            barRight.x, barRight.y = barRX, barRY
-            barLeft.x, barLeft.y = barLX, barLY
+            barRight.setLocation(barRX, barRY)
+            barLeft.setLocation(barLX, barLY)
             # check game end
-            if(scoreL==ENDPOINT)
+            if(barLeft.score==ENDPOINT)
                 finish = true
                 playerSide = "left"
             end
         elsif(ball.x<0) # left goal
-            scoreR += 1
+            barRight.score += 1
             playing = false
             # position initializing
             ball.setLocation(ballX, ballY)
-            barRight.x, barRight.y = barRX, barRY
-            barLeft.x, barLeft.y = barLX, barLY
+            barRight.setLocation(barRX, barRY)
+            barLeft.setLocation(barLX, barLY)
             # check game end
-            if(scoreR==ENDPOINT)
+            if(barRight.score==ENDPOINT)
                 finish = true
                 playerSide = "right"
             end
@@ -131,15 +151,16 @@ Window.loop do
         Window.draw_font(windowW/2-120, windowH-32, "SPACEキーで開始", font)
         if(Input.key_push?(K_SPACE))
             playing = true
+            ball.setSpeed()
         end
     end
 
     # draw score
-    Window.draw_font(0, 0, "#{scoreL}", font)
-    Window.draw_font(windowW-32, 0, "#{scoreR}", font)
+    Window.draw_font(0, 0, "#{barLeft.score}", font)
+    Window.draw_font(windowW-32, 0, "#{barRight.score}", font)
 
     if(finish)
-        # drawa winner
+        # draw winner
         Window.draw_font(windowW/2-120, 100, "Winner    Bar "+playerSide, font)
         # draw ball & bars
         ball.draw()
@@ -150,7 +171,8 @@ Window.loop do
         Window.draw_font(windowW/2-130, windowH-32, "ENTERキーでリスタート", font)
         if(Input.key_push?(K_RETURN)) # Enter restart
             playing, finish = false, false
-            scoreR, scoreL = 0, 0
+            barRight.score, barLeft.score = 0, 0
+            ball.setSpeed()
         elsif(Input.key_push?(K_ESCAPE)) # Esc finish
             break
         end

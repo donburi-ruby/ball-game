@@ -2,8 +2,9 @@ class Ball < Sprite
   attr_accessor :speedX, :speedY
     def initialize(x, y, image)
      @ball = image
-     @speedX = rand(3)+1
-     @speedY = rand(3)+1
+     @speedX = 0
+     @speedY = 0
+     setSpeed()
      super
     end
 
@@ -23,6 +24,17 @@ class Ball < Sprite
 
     def boundY
       @speedY *= -1
+    end
+
+    def setSpeed
+      @speedX = 0
+      while(@speedX==0)
+        @speedX = rand(0..6)-3
+      end
+      @speedY = 0
+      while(@speedY==0)
+        @speedY = rand(0..6)-3
+      end
     end
 
 end
