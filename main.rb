@@ -2,7 +2,7 @@ require 'dxruby'
 require_relative 'Ball'
 require_relative 'Bar'
 
-ENDPOINT = 10
+ENDPOINT = 3
 
 #テスト
 # Window Size 
@@ -152,6 +152,10 @@ Window.loop do
         if(Input.key_push?(K_SPACE))
             playing = true
             ball.setSpeed()
+        end
+
+        if(Input.key_down?(K_ESCAPE))
+            break
         end
     end
 
